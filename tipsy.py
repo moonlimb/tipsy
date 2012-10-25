@@ -68,9 +68,14 @@ def authenticate():
     email_entered = request.form['email']
     password_entered = request.form['password']
     logged_in_user = model.authenticate(g.db, email_entered, password_entered)
-    logged_in_user_id = logged_in_user['id']
-    session['user_id'] = logged_in_user_id
-    return redirect("/tasks")
+    
+    if logged_in_user:
+        logged_in_user_id = logged_in_user['id']
+        session['user_id'] = logged_in_user_id
+        return redirect("/tasks")
+    
+    flash("Invalid username or password")
+    return redirect("/login")
 
 #executed after each view; closes connection to our database
 @app.teardown_request
