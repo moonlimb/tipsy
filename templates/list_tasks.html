@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<a href="{{ url_for("logout") }}">log out</a>
+
+
 <h1>Task List</h1>
 <div class="tasklist">
     <ul>
@@ -16,9 +19,8 @@
 </div>
 
 <form method="POST" action="{{ url_for("save_task") }}">
-    <label for="title">New Task Item
-    <input type="text" name="title" id="title"></input>
-    <input type="submit"></input>
+    <input type="text" name="title" id="enter_task" placeholder="Enter a new task"></input>
+    <input type="submit" id="submit_button"></input>
 </form>
 
 {% endblock %}
