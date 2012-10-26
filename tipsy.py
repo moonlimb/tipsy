@@ -39,19 +39,19 @@ def save_task():
 def list_tasks():
     current_user_id = session.get('user_id', None)
     if current_user_id:
-        tasks_for_current_user = model.get_tasks(g.db, current_user_id)
+        tasks_for_current_user = model.Task.get_all(g.db, current_user_id)
         return render_template("list_tasks.html", tasks=tasks_for_current_user)
     else:
         return redirect("/")
 
-@app.route("/task/<int:id>", methods=["GET"])
-def view_task(id):
-    task_from_db = model.get_task(g.db, id)
-    return render_template("view_task.html", task=task_from_db)
-
-@app.route("/task/<int:id>", methods=["POST"])
+@app.route("/complete_task/<int:id>", methods=["GET","POST"])
 def complete_task(id):
-    model.complete_task(g.db, id)
+    model.Task.complete(g.db,id)
+    return redirect("/tasks")
+
+@app.route("/delete_task/<int:id>", methods=["GET","POST"])
+def delete_task(id):
+    model.Task.delete(g.db,id)
     return redirect("/tasks")
 
 @app.route("/login", methods=["GET","POST"])

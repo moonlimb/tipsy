@@ -10,10 +10,16 @@
     <ul>
         {% for task in tasks %}
         <li>
-            <a href="{{ url_for("view_task", id=task['id']) }}">Task {{ task['id'] }}</a>:
-            {{ task['title'] }}
-            {% if task['completed_at'] %} &mdash; Completed
+            <strong>{{ task.id }} -- {{ task.title }}</strong>
+            {% if task.completed_at %} &mdash; This is done!
+            {% else %}
+                <a href="{{ url_for("complete_task", id = task.id) }}", method="POST">
+                &mdash; Complete
+                </a>
             {% endif %}
+                <a href="{{ url_for("delete_task", id = task.id) }}", method="POST">
+                &mdash; Delete
+                </a>
         </li>
         {% endfor %}
     </ul>
