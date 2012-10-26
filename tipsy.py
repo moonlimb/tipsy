@@ -63,7 +63,7 @@ def logout():
     session['user_id'] = None
     return redirect("/login")
 
-@app.route("/authenticate", methods=["GET","POST"])
+@app.route("/", methods=["GET","POST"])
 def authenticate():
     email_entered = request.form['email']
     password_entered = request.form['password']

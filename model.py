@@ -4,22 +4,9 @@ model.py
 import sqlite3
 import datetime
 
-TASK_COLS = ['id','title','created_at','completed_at','user_id']
-USER_COLS = ['id', 'email', 'password', 'username']
-
 def connect_db():
     return sqlite3.connect("tipsy.db")
 
-def authenticate(db, email, password):
-    c = db.cursor()
-    query = """SELECT * from Users WHERE email=? AND password=?"""
-    c.execute(query, (email, password))
-    result = c.fetchone()
-    if result:
-        fields = ["id", "email", "password", "username"]
-        return make_user(result)
-
-    return None
 
 def insert_into_db(db, table_name, table_columns, values):
     c = db.cursor()
@@ -38,13 +25,6 @@ def insert_into_db(db, table_name, table_columns, values):
         db.commit()
         return res.lastrowid
 
-def new_user(db, email, password, name):
-    values = [email, password, name]
-    return insert_into_db(db, "Users", USER_COLS, values)
-
-def new_task(db, title, user_id):
-    values = [title, datetime.datetime.now(), None, user_id]
-    return insert_into_db(db, "Tasks", TASK_COLS, values)
 
 def get_from_table_by_id(db, table_name, target_id, make_user_or_task):
     c = db.cursor()
@@ -56,21 +36,73 @@ def get_from_table_by_id(db, table_name, target_id, make_user_or_task):
     row = c.fetchone()
 
     if row:
-        return make_user_or_task(row)
+
+        resulting_user = User(row[0], row[1], row[2], row[3])
 
     return None
 
-def make_user(row):
-    fields = ["id", "email", "password", "username"]
-    return dict(zip(fields, row))
+
+class User(object):
+
+    COLS = ['id', 'email', 'password', 'username']
+    TABLE_NAME = "Users"
+
+    def __init__(self, id, email, password, name):
+        self.id = id
+        self.email = email
+        self.password = password
+        self.name = name
+
+    @classmethod
+    def new(cls, db, email, password, name):
+        values = [email, password, name]
+        return insert_into_db(db, cls.TABLE_NAME, cls.COLS, values)
+
+    @classmethod
+    def authenticate(cls, db, email, password):
+        c = db.cursor()
+        query = """SELECT * from %s WHERE email=? AND password=?""" %(cls.TABLE_NAME)
+        c.execute(query, (email, password))
+        result = c.fetchone()
+        if result:
+            return cls(*result)
+
+        return None
+
+    @classmethod
+    def get(cls, db, user_id):
+        return cls
+        return get_from_table_by_id(db, cls.TABLE_NAME, user_id, )
+
+
+def get_user(db, user_id):
+    """Gets a user dictionary out of the database given an id"""
+    return get_from_table_by_id(db, "Users", user_id, make_user)
+
+
+# class Task(object):
+    COLS = ['id','title','created_at','completed_at','user_id']]
+
+#ORM = object relational mapping?
+
+
+
+TASK_COLS = ['id','title','created_at','completed_at','user_id']
+
+
+
+def new_task(db, title, user_id):
+    values = [title, datetime.datetime.now(), None, user_id]
+    return insert_into_db(db, "Tasks", TASK_COLS, values)
+
+
+
+
 
 def make_task(row):
     columns = ["id", "title", "created_at", "completed_at", "user_id"]
     return dict(zip(columns, row))
 
-def get_user(db, user_id):
-    """Gets a user dictionary out of the database given an id"""
-    return get_from_table_by_id(db, "Users", user_id, make_user)
 
 def get_task(db, task_id):
     """Gets a single task, given its id. Returns a dictionary of the task data."""
