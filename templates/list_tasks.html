@@ -1,6 +1,33 @@
-<html>
-    <head><title>Tipsy</title></head>
-    <body>
-        <h1>Task List</h1>
-    </body>
-</html>
+{% extends "layout.html" %}
+{% block body %}
+
+<a href="{{ url_for("logout") }}">log out</a>
+
+
+<h1>Task List</h1>
+
+<div class="tasklist">
+    <ul>
+        {% for task in tasks %}
+        <li>
+            <strong>{{ task.id }} -- {{ task.title }}</strong>
+            {% if task.completed_at %} &mdash; This is done!
+            {% else %}
+                <a href="{{ url_for("complete_task", id = task.id) }}", method="POST">
+                &mdash; Complete
+                </a>
+            {% endif %}
+                <a href="{{ url_for("delete_task", id = task.id) }}", method="POST">
+                &mdash; Delete
+                </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<form method="POST" action="{{ url_for("save_task") }}">
+    <input type="text" name="title" id="enter_task" placeholder="Enter a new task"></input>
+    <input type="submit" id="submit_button"></input>
+</form>
+
+{% endblock %}
