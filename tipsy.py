@@ -32,7 +32,7 @@ def get_date():
 def save_task():
     current_user_id = session.get("user_id",None)
     title = request.form['title']
-    model.new_task(g.db, title, current_user_id)
+    model.Task.new(g.db, title, current_user_id)
     return redirect("/tasks")
 
 @app.route("/tasks")
@@ -67,10 +67,10 @@ def logout():
 def authenticate():
     email_entered = request.form['email']
     password_entered = request.form['password']
-    logged_in_user = model.authenticate(g.db, email_entered, password_entered)
+    logged_in_user = model.User.authenticate(g.db, email_entered, password_entered)
     
     if logged_in_user:
-        logged_in_user_id = logged_in_user['id']
+        logged_in_user_id = logged_in_user.id
         session['user_id'] = logged_in_user_id
         return redirect("/tasks")
     

@@ -1,13 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<h1>Task {{ task['id'] }} &mdash;
-
-    {% if task['completed_at'] %}<span class="status">Completed</span>
+<h1>Task {{ task.id }} &mdash;
+    {% if task.completed_at %}<span class="status">Completed</span>
     {% endif %} </h1>
 
-    <h2>{{ task['title'] }}</h2>
-    <form action="{{ url_for("view_task", id = task['id']) }}" method="POST">
+    <h2>{{ task.title }}</h2>
+    <form action="{{ url_for("view_task", id = task.id) }}" method="POST">
         <input type="submit" value = "Complete Task">
     </form>
 
