@@ -5807,3 +5807,17 @@ a.badge:hover {
   font-weight: bold;
   margin-left: 5px;
 }
+
+#signup_button{
+    background-color: #404040;
+    color: white;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#signup_button hover{
+    background-color: #8B0A50;
+    color: white;
+    font-weight: bold;
+    margin-top: 10px;
+}
