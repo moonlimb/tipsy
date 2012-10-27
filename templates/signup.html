@@ -1,0 +1,33 @@
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% extends "layout.html" %}
+{% block body %}
+
+<div id="login">
+
+
+
+<h1>Sign Up Here</h1>
+<h3>You're on the road to getting tipsy...</h3>
+
+<br>
+
+<form action="{{ url_for ("signup_complete") }}" method="POST">
+
+	<input class = "login_input" type="text" name="signup-name" placeholder="Your first name">
+    <br>
+    <input class = "login_input" type="text" name="signup-email" placeholder="name@hackbright.com">
+    <br>
+    <input class = "login_input" type="password" name="signup-password" placeholder="Password">
+    <br>
+    <input id="signup_button" type="submit" value="Sign Up">
+
+</form>
+
+</div>
+
+{% endblock %}

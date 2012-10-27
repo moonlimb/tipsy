@@ -63,6 +63,26 @@ def logout():
     session['user_id'] = None
     return redirect("/login")
 
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
+@app.route("/signup_complete", methods=["GET", "POST"])
+def signup_complete():
+    name_given = request.form['signup-name']
+    email_given = request.form['signup-email']
+    password_given = request.form['signup-password']
+
+    user_already_exists = model.User.exists(g.db, email_given)
+
+    if user_already_exists:
+        flash("There is an existing user associated with this email. Please log in below or sign up with a different email.")
+        return redirect("/login")
+
+    model.User.new(g.db,email_given, password_given, name_given)
+    flash("New account successfully created! Please log in below.")
+    return redirect("/login")
+
 @app.route("/", methods=["GET","POST"])
 def authenticate():
     email_entered = request.form['email']

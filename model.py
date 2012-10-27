@@ -79,6 +79,22 @@ class User(object):
     def get(cls, db, user_id):
         return get_from_table_by_id(db, cls.TABLE_NAME, user_id, cls.COLS)
 
+    """This checks if an email already exists, when a new user is signing up"""
+    @classmethod
+    def exists(cls, db, email):
+        c = db.cursor()
+        query = """SELECT * FROM Users WHERE email=?"""
+        c.execute(query, (email,))
+        result = c.fetchone()   #if user already exists, this will return a record. Otherwise, it will return None
+
+        if result:
+            return True
+
+        return False
+
+
+
+
 #ORM = object relational mapping?
 class Task(object):
     COLS = ['id','title','created_at','completed_at','user_id']
